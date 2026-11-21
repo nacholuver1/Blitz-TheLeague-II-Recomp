@@ -86,10 +86,13 @@ class BlitzApp : public rex::app::TitleApp {
     // GPU defaults. Set here rather than OnConfigure because the GPU driver
     // module registers these settings.
     //
-    // Blitz renders some textures on the GPU and then processes them on the CPU
-    // (create-a-team helmets, sideline players/cheerleaders). Without resolve
-    // readback the CPU sees stale memory: scrambled helmets, invisible sideline.
-    DefaultSetting("gpu.xenos.readback_resolve", "full");
+    // The game reads rendered images back on the CPU (motion blur reuses the
+    // previous frame; Blitz 1 also baked helmets this way). "none" leaves ghost
+    // trails behind every player. "full" (what Blitz 1 needed) stalls the CPU on
+    // the GPU each time and halves Blitz 2 to 30 fps, which is slow motion since
+    // game speed follows the frame rate. "fast" reads one frame late: correct
+    // picture at 59-60 fps on Vulkan.
+    DefaultSetting("gpu.xenos.readback_resolve", "fast");
     // With async compilation, draws whose pipeline isn't ready are skipped. The
     // helmet logo is baked once when a campaign loads, so a skipped bake leaves
     // the custom team's logo missing for the whole session.
