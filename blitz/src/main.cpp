@@ -61,6 +61,11 @@ class BlitzApp : public rex::app::TitleApp {
     // Keep compiled shaders between runs (the SDK keeps none by default). With
     // synchronous compilation this removes the first-time hitches on later runs.
     DefaultSetting("app.cache_root", "{app.root}/cache");
+    // Vulkan by default. On D3D12 Blitz 2 runs at ~10 fps in game (also seen in
+    // Xenia: xenia-project/game-compatibility#1628, xenia-canary/game-compatibility#332,
+    // where D3D12 through vkd3d is 2-3x faster); native Vulkan runs ~3x faster
+    // here with all textures. --gpu.driver=d3d12 still selects D3D12.
+    DefaultSetting("gpu.driver", "vulkan");
     // The SDK writes app.root into blitz.toml. Lock it to the exe's folder so
     // a moved or renamed game folder keeps its saves/cache/logs with it.
     if (auto r = settings.SetText(rex::SettingLayer::kLock, "app.root",
