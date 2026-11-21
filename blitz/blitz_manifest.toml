@@ -1,0 +1,35 @@
+# Blitz: The League II - ReXGlue codegen manifest.
+
+[project]
+name = "blitz2"
+sdk_version = "0.11.0"
+game_root = "../game"
+hook_sources = ["src"]
+
+[entrypoint]
+file_path = "../game/default.xex"
+out_directory_path = "generated/default"
+includes = []
+
+# CRT setjmp/longjmp. TODO: port from Blitz 1 (0x82770D90 / 0x82770B40) with
+# tools/port_addresses.py once the image is dumped.
+# setjmp_address  = 0x0
+# longjmp_address = 0x0
+
+# Console-exact vector math (fused multiply-add, dot products, estimates).
+# Kept from Blitz 1, where it ran a full hour without the audio dropout.
+[entrypoint.vector_math]
+vmaddfp     = "exact"
+vnmsubfp    = "exact"
+vmsum3fp128 = "exact"
+vmsum4fp128 = "exact"
+vrefp       = "exact"
+vrsqrtefp   = "exact"
+vexptefp    = "exact"
+fres        = "exact"
+frsqrte     = "exact"
+
+# Statically linked XAPILIB fiber routines -> SDK host-fiber shims.
+# TODO: port from Blitz 1 (ConvertThreadToFiber 0x8242ABC8, ConvertFiberToThread
+# 0x8242AC58, CreateFiber 0x8242ACA8, DeleteFiber 0x8242AD88, SwitchToFiber 0x8242ADE8).
+[entrypoint.shim]
