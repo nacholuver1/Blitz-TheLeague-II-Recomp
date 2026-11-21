@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Packs the Linux player download: dist/BlitzTheLeague-<version>-linux-x64.tar.gz
+# Packs the Linux player download: dist/BlitzTheLeagueII-<version>-linux-x64.tar.gz
 # Contents: blitz, the SDK shared libraries, README.txt and licenses/. Never any game data.
 # usage: tools/make_release_linux.sh <version> [--no-build]
 set -euo pipefail

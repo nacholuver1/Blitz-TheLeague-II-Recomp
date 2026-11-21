@@ -1,6 +1,6 @@
 // blitz - ReXGlue Recompiled Project
 //
-// Blitz-specific settings (scope "blitz"), stored in blitz.toml with the SDK ones.
+// Blitz-specific settings (scope "blitz"), stored in blitz2.toml with the SDK ones.
 
 #pragma once
 

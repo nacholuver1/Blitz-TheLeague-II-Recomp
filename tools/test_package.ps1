@@ -1,4 +1,4 @@
-# Launches the packaged blitz.exe with no arguments, screenshots the launcher,
+# Launches the packaged blitz2.exe with no arguments, screenshots the launcher,
 # presses Enter (START GAME), screenshots the game, then reports what it used.
 Add-Type -AssemblyName System.Drawing
 Add-Type @"
@@ -21,7 +21,7 @@ function Shot($h, $out) {
 }
 $dir = Join-Path (Split-Path $PSScriptRoot -Parent) "BlitzPC"
 $work = Join-Path (Split-Path $PSScriptRoot -Parent) "work"
-$p = Start-Process -FilePath "$dir\blitz.exe" -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds 8
 $p.Refresh(); $h = $p.MainWindowHandle
 Shot $h "$work\pkg_launcher.png"
@@ -34,4 +34,4 @@ Start-Sleep -Seconds 1
 "--- folder after run"; Get-ChildItem $dir -Name
 "--- cache"; Get-ChildItem "$dir\cache" -Recurse -File -ErrorAction SilentlyContinue | Measure-Object | ForEach-Object { "$($_.Count) cache files" }
 "--- log"; Get-ChildItem "$dir\logs" | Sort-Object LastWriteTime -Descending | Select-Object -First 1 | ForEach-Object { Get-Content $_.FullName | Select-String -Pattern "blitz:|no game folder| E " | Select-Object -First 10 }
-"--- blitz.toml"; Get-Content "$dir\blitz.toml"
+"--- blitz2.toml"; Get-Content "$dir\blitz2.toml"

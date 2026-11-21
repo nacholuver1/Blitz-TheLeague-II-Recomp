@@ -1,4 +1,4 @@
-"""Launch blitz.exe, wait, then read big-endian guest memory through lldb.
+"""Launch blitz2.exe, wait, then read big-endian guest memory through lldb.
 
 Guest address A lives at host 0x100000000 + A.
 Usage: python guestpeek.py [--wait 12] [--config RelWithDebInfo]
@@ -18,7 +18,7 @@ ap.add_argument("--config", default="RelWithDebInfo")
 args = ap.parse_args()
 
 exe_dir = str(pathlib.Path(__file__).resolve().parents[1] / "blitz" / "out" / "build" / "win-amd64" / args.config)
-proc = subprocess.Popen([rf"{exe_dir}\blitz.exe"],
+proc = subprocess.Popen([rf"{exe_dir}\blitz2.exe"],
                         cwd=exe_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(args.wait)
 

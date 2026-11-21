@@ -1,4 +1,4 @@
-# Launches blitz.exe, waits, presses a key in its window, waits, screenshots, kills it.
+# Launches blitz2.exe, waits, presses a key in its window, waits, screenshots, kills it.
 # Usage: powershell -File screenshot_key.ps1 -Wait 30 -Key "{F3}" -Out $(Split-Path $PSScriptRoot -Parent)\work\shot_f3.png
 param(
   [string]$Config = "Release",
@@ -23,7 +23,7 @@ public static class Win2 {
 "@
 $dir = "$(Split-Path $PSScriptRoot -Parent)\blitz\out\build\win-amd64\$Config"
 $launchArgs = @{}; if ($ExtraArgs) { $launchArgs.ArgumentList = $ExtraArgs }
-$p = Start-Process -FilePath "$dir\blitz.exe" @launchArgs -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" @launchArgs -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds $Wait
 $p.Refresh()
 $h = $p.MainWindowHandle

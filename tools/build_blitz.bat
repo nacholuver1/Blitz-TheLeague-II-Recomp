@@ -3,7 +3,7 @@ rem Builds the Blitz project. Works from any folder name - paths are relative to
 rem   build_blitz.bat configure        re-run CMake configure
 rem   build_blitz.bat release          build Release, the build BlitzPC ships
 rem   build_blitz.bat relwithdebinfo   build with debug symbols
-rem   build_blitz.bat package          build Release and copy blitz.exe + DLLs into BlitzPC
+rem   build_blitz.bat package          build Release and copy blitz2.exe + DLLs into BlitzPC
 rem The environment setup is inlined (same as rexenv.bat): calling rexenv.bat from
 rem here breaks vcvars64 when the project path contains spaces.
 setlocal
@@ -37,7 +37,7 @@ exit /b %errorlevel%
 :package
 cmake --build --preset win-amd64-release
 if errorlevel 1 exit /b 1
-rem Program files only. Never touches BlitzPC\user or BlitzPC\blitz.toml.
+rem Program files only. Never touches BlitzPC\user or BlitzPC\blitz2.toml.
 copy /y "out\build\win-amd64\Release\blitz2.exe" "..\BlitzPC" >nul
 if errorlevel 1 exit /b 1
 copy /y "out\build\win-amd64\Release\*.dll" "..\BlitzPC" >nul

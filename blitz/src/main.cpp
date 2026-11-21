@@ -66,7 +66,7 @@ class BlitzApp : public rex::app::TitleApp {
     // where D3D12 through vkd3d is 2-3x faster); native Vulkan runs ~3x faster
     // here with all textures. --gpu.driver=d3d12 still selects D3D12.
     DefaultSetting("gpu.driver", "vulkan");
-    // The SDK writes app.root into blitz.toml. Lock it to the exe's folder so
+    // The SDK writes app.root into blitz2.toml. Lock it to the exe's folder so
     // a moved or renamed game folder keeps its saves/cache/logs with it.
     if (auto r = settings.SetText(rex::SettingLayer::kLock, "app.root",
                                   rex::platform::GetExecutableFolder().generic_string());
@@ -188,7 +188,7 @@ class BlitzApp : public rex::app::TitleApp {
   // Finds the game files. A configured title.game_root is kept only if it holds
   // default.xex; otherwise (unset, or stale after the folder was renamed or
   // moved) look for a "game" folder next to the exe and then in each parent
-  // folder, so both <root>\BlitzPC\blitz.exe and the build folders under
+  // folder, so both <root>\BlitzPC\blitz2.exe and the build folders under
   // <root>\blitz\out\... find <root>\game.
   static void DefaultGameRoot() {
     namespace fs = std::filesystem;
@@ -216,7 +216,7 @@ class BlitzApp : public rex::app::TitleApp {
     }
     if (found.empty()) {
       REXLOG_WARN("blitz: no game folder found (configured: '{}'); put the game in a 'game' "
-                  "folder next to BlitzPC or set title.game_root in blitz.toml",
+                  "folder next to BlitzPC or set title.game_root in blitz2.toml",
                   configured);
       return;
     }
@@ -224,7 +224,7 @@ class BlitzApp : public rex::app::TitleApp {
       DefaultSetting("title.game_root", found.generic_string());
       return;
     }
-    // A stale path from blitz.toml: override it above the config-file layer.
+    // A stale path from blitz2.toml: override it above the config-file layer.
     REXLOG_WARN("blitz: game folder '{}' not found, using '{}'", configured,
                 found.generic_string());
     if (auto r = registry.SetText(rex::SettingLayer::kRuntime, "title.game_root",

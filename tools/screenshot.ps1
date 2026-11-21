@@ -1,4 +1,4 @@
-# Launches blitz.exe, waits, screenshots its window, then (optionally) kills it.
+# Launches blitz2.exe, waits, screenshots its window, then (optionally) kills it.
 # Usage: powershell -File screenshot.ps1 -Wait 45 -Out $(Split-Path $PSScriptRoot -Parent)\work\shot.png [-Keep]
 param(
   [string]$Config = "Release",
@@ -18,7 +18,7 @@ public static class Win {
 }
 "@
 $dir = "$(Split-Path $PSScriptRoot -Parent)\blitz\out\build\win-amd64\$Config"
-$p = Start-Process -FilePath "$dir\blitz.exe" -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds $Wait
 $p.Refresh()
 $h = $p.MainWindowHandle

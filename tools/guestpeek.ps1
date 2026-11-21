@@ -1,4 +1,4 @@
-# Launches blitz.exe, waits, then reads big-endian guest memory with lldb.
+# Launches blitz2.exe, waits, then reads big-endian guest memory with lldb.
 # Guest address A lives at host 0x100000000 + A.
 # Usage: powershell -File guestpeek.ps1 -Wait 12
 param(
@@ -7,7 +7,7 @@ param(
 )
 $lldb = "C:\Program Files\LLVM\bin\lldb.exe"
 $dir = "$(Split-Path $PSScriptRoot -Parent)\blitz\out\build\win-amd64\$Config"
-$p = Start-Process -FilePath "$dir\blitz.exe" -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds $Wait
 
 function Read-Guest([uint64]$addr, [int]$count) {

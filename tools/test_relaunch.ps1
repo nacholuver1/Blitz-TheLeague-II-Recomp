@@ -1,5 +1,5 @@
 # Tests the launcher's relaunch path with a throwaway config:
-# Render resolution -> 2x, back up to START GAME, Enter. Expects a new blitz.exe
+# Render resolution -> 2x, back up to START GAME, Enter. Expects a new blitz2.exe
 # process that skipped the launcher and renders at 2x.
 $cfg = "$(Split-Path $PSScriptRoot -Parent)\work\test_launcher.toml"
 Remove-Item $cfg -ErrorAction SilentlyContinue
@@ -17,7 +17,7 @@ function Press([byte]$vk) {
   [K]::keybd_event($vk, 0, $ext -bor 2, [UIntPtr]::Zero); Start-Sleep -Milliseconds 600
 }
 $dir = "$(Split-Path $PSScriptRoot -Parent)\blitz\out\build\win-amd64\Release"
-$p = Start-Process -FilePath "$dir\blitz.exe" -ArgumentList "--app.config_file=`"$cfg`" --log.level=debug" -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" -ArgumentList "--app.config_file=`"$cfg`" --log.level=debug" -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds 8
 $p.Refresh(); [K]::SetForegroundWindow($p.MainWindowHandle) | Out-Null; Start-Sleep -Milliseconds 500
 Press 0x28; Press 0x28; Press 0x27   # Down, Down, Right: render resolution -> 2x

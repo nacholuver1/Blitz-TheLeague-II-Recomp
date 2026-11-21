@@ -1,4 +1,4 @@
-"""Launch blitz.exe, wait, and run lldb probes against guest state.
+"""Launch blitz2.exe, wait, and run lldb probes against guest state.
 
 Finds the host thread whose backtrace contains a given guest function, selects the
 frame of that function, and prints guest registers from its PPC context.
@@ -26,7 +26,7 @@ ap.add_argument("--keep", action="store_true", help="leave the process running")
 args = ap.parse_args()
 
 exe_dir = str(pathlib.Path(__file__).resolve().parents[1] / "blitz" / "out" / "build" / "win-amd64" / args.config)
-proc = subprocess.Popen([rf"{exe_dir}\blitz.exe"],
+proc = subprocess.Popen([rf"{exe_dir}\blitz2.exe"],
                         cwd=exe_dir, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 time.sleep(args.wait)
 

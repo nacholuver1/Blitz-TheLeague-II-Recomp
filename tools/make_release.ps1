@@ -1,5 +1,5 @@
-# Builds Release and packs the player download: dist\BlitzTheLeague-<version>-win64.zip
-# Contents: blitz.exe, the SDK DLLs, README.txt and licenses\. Never any game data.
+# Builds Release and packs the player download: dist\BlitzTheLeagueII-<version>-win64.zip
+# Contents: blitz2.exe, the SDK DLLs, README.txt and licenses\. Never any game data.
 #
 # Usage: powershell -ExecutionPolicy Bypass -File tools\make_release.ps1 -Version 1.0.0 [-NoBuild]
 param(
