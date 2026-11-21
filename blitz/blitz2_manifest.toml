@@ -1,0 +1,42 @@
+# Blitz: The League II - ReXGlue codegen manifest.
+
+[project]
+name = "blitz2"
+sdk_version = "0.11.0"
+game_root = "../game"
+hook_sources = ["src"]
+
+[entrypoint]
+file_path = "../game/default.xex"
+out_directory_path = "generated/default"
+includes = []
+
+# CRT setjmp/longjmp, ported from Blitz 1 (0x82770D90 / 0x82770B40).
+# setjmp matched exactly (tools/port_addresses.py); longjmp found by its jmp_buf
+# restore sequence (same offsets: f14-f31 @0x00, r1 @0x90, lr @0x134, flag @0x138).
+setjmp_address  = 0x827F5EF0
+longjmp_address = 0x827F5AB0
+
+# Console-exact vector math (fused multiply-add, dot products, estimates).
+# Kept from Blitz 1, where it ran a full hour without the audio dropout.
+[entrypoint.vector_math]
+vmaddfp     = "exact"
+vnmsubfp    = "exact"
+vmsum3fp128 = "exact"
+vmsum4fp128 = "exact"
+vrefp       = "exact"
+vrsqrtefp   = "exact"
+vexptefp    = "exact"
+fres        = "exact"
+frsqrte     = "exact"
+
+# Statically linked XAPILIB fiber routines -> SDK host-fiber shims. Same order
+# and lengths as Blitz 1; ConvertThreadToFiber / DeleteFiber matched exactly,
+# the others differ slightly (XDK 2.0.7645 vs 3529). SwitchToFiber is the stub
+# that branches to the real stack switch.
+[entrypoint.shim]
+ConvertThreadToFiber = 0x82493700
+ConvertFiberToThread = 0x82493790
+CreateFiber          = 0x824937E0
+DeleteFiber          = 0x824938C0
+SwitchToFiber        = 0x82493920

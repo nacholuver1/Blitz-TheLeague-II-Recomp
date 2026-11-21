@@ -1,4 +1,4 @@
-# Launches blitz.exe, waits, attaches lldb to dump all thread stacks, then kills it.
+﻿# Launches blitz2.exe, waits, attaches lldb to dump all thread stacks, then kills it.
 # Usage: powershell -File stackdump.ps1 [-Config RelWithDebInfo] [-Wait 12] [-Out $(Split-Path $PSScriptRoot -Parent)\work\stacks.txt]
 param(
   [string]$Config = "RelWithDebInfo",
@@ -8,7 +8,7 @@ param(
 )
 $dir = "$(Split-Path $PSScriptRoot -Parent)\blitz\out\build\win-amd64\$Config"
 $launchArgs = @{}; if ($ExtraArgs) { $launchArgs.ArgumentList = $ExtraArgs }
-$p = Start-Process -FilePath "$dir\blitz.exe" @launchArgs -WorkingDirectory $dir -PassThru
+$p = Start-Process -FilePath "$dir\blitz2.exe" @launchArgs -WorkingDirectory $dir -PassThru
 Start-Sleep -Seconds $Wait
 $cmds = @(
   "-o", "thread list",

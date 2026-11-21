@@ -49,12 +49,12 @@ namespace {
 
 using namespace blitz::ui;
 
-// The disc this build was recompiled from: Blitz: The League (USA, Europe).
+// The disc this build was recompiled from: Blitz: The League II (USA, Europe).
 // The recompiled code only matches this exact default.xex.
-constexpr uint32_t kTitleId = 0x4D5707D4;
+constexpr uint32_t kTitleId = 0x4D5707E8;
 constexpr std::array<uint8_t, 32> kXexSha256 = {
-    0x3e, 0xb7, 0x63, 0x82, 0xb8, 0xd3, 0x98, 0x77, 0x9b, 0xc9, 0xbf, 0x86, 0x5e, 0xcc, 0xf8, 0x29,
-    0xf1, 0xde, 0xc3, 0x87, 0x06, 0xf2, 0xed, 0xb3, 0x30, 0x85, 0x01, 0xcb, 0x93, 0xda, 0x4c, 0x4e};
+    0x4a, 0xac, 0xdf, 0xca, 0x93, 0x43, 0x23, 0x8e, 0x3f, 0x57, 0xe6, 0xdf, 0x32, 0xb8, 0x15, 0x9a,
+    0xe3, 0xfe, 0x4e, 0x33, 0x48, 0x72, 0x5c, 0x3b, 0x8e, 0x7e, 0x71, 0xb1, 0xc1, 0x3d, 0x66, 0x60};
 
 // ------------------------------------------------------------------ xex check
 uint32_t Be32(const uint8_t* p) {
@@ -458,7 +458,7 @@ const char* RowLabel(int row) {
 constexpr const char* kIntro =
     "This build doesn't include the game. You need your own copy of Blitz: The League II for "
     "Xbox 360 (USA / Europe disc), dumped to a disc image (.iso). The image is unpacked into a "
-    "'game' folder next to " BLITZ_EXE " (about 6.3 GB, one time only). If you already extracted "
+    "'game' folder next to " BLITZ_EXE " (about 6.7 GB, one time only). If you already extracted "
     "the disc, choose that folder instead (it must contain default.xex).";
 
 class SetupDialog final : public rex::ui::IDialog {
