@@ -80,6 +80,7 @@ enum Row {
   kAudioBuffer,
   kFpsCounter,
   kLauncherAtStart,
+  kSkipIntro,
   kCloseMenu,
   kQuit,
 };
@@ -89,11 +90,11 @@ enum Row {
 const std::vector<Row> kLauncherRows = {
     kStartGame, kDisplayMode, kRenderRes,  kAntiAlias,  kFiltering, kVsync,
     kAspect,    kVolume,      kMute,       kMuteUnfocused, kAudioBuffer, kFpsCounter,
-    kLauncherAtStart, kQuit};
+    kLauncherAtStart, kSkipIntro, kQuit};
 const std::vector<Row> kInGameRows = {
     kDisplayMode, kRenderRes,  kAntiAlias,   kFiltering,       kVsync,
     kAspect,      kVolume,     kMute,        kMuteUnfocused, kAudioBuffer,  kFpsCounter,
-    kLauncherAtStart, kCloseMenu, kQuit};
+    kLauncherAtStart, kSkipIntro, kCloseMenu, kQuit};
 
 constexpr const char* kRestartSettings[] = {"gpu.resolution_scale_x", "gpu.xenos.swap_post_effect",
                                             "apu.max_queued_frames"};
@@ -152,6 +153,7 @@ const char* Label(Row row) {
     case kAudioBuffer: return "Audio buffer";
     case kFpsCounter: return "FPS counter";
     case kLauncherAtStart: return "Launcher at startup";
+    case kSkipIntro: return "Intro video";
     case kCloseMenu: return "Close menu";
     case kQuit: return "Quit";
   }
@@ -174,6 +176,7 @@ const char* Note(Row row) {
     case kAudioBuffer: return "Bigger fixes crackles, smaller has less delay.";
     case kFpsCounter: return "Show frame rate in the corner (also F3).";
     case kLauncherAtStart: return "Off starts the game directly. F1 / Esc / Guide still open this menu.";
+    case kSkipIntro: return "Skip goes straight to loading instead of the opening logo video.";
     case kCloseMenu: return "Back to the game.";
     case kQuit: return nullptr;
   }
@@ -199,6 +202,7 @@ std::string Value(Row row) {
     case kAudioBuffer: return kAudioLabels[AudioIndex()];
     case kFpsCounter: return GetBool("blitz.show_fps") ? "On" : "Off";
     case kLauncherAtStart: return GetBool("blitz.launcher") ? "On" : "Off";
+    case kSkipIntro: return GetBool("blitz.skip_intro") ? "Skip" : "Play";
     default: return {};
   }
 }
@@ -408,6 +412,7 @@ class BlitzMenu final : public rex::ui::IDialog {
         break;
       }
       case kLauncherAtStart: SetBool("blitz.launcher", !GetBool("blitz.launcher")); break;
+      case kSkipIntro: SetBool("blitz.skip_intro", !GetBool("blitz.skip_intro")); break;
       default: return;
     }
     if (const char* rs = RestartSetting(row); rs && RestartPending(rs)) {
