@@ -59,7 +59,7 @@ git clone --recursive https://github.com/nacholuver1/Blitz-TheLeague-II-Recomp.g
 cd Blitz-TheLeague-II-Recomp
 
 rem 1. ReXGlue SDK v0.11.0 (submodule) + this project's patches, then build and install it
-git -C deps/rexglue-sdk apply ../../patches/rexglue-dcbz-128.patch ../../patches/rexglue-audio-diag.patch
+git -C deps/rexglue-sdk apply ../../patches/rexglue-dcbz-128.patch ../../patches/rexglue-audio-diag.patch ../../patches/rexglue-vsync-relaxed.patch
 tools\build_sdk.bat
 
 rem 2. Put your extracted disc in game\ (must contain default.xex), e.g.

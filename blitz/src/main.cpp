@@ -97,6 +97,13 @@ class BlitzApp : public rex::app::TitleApp {
     // helmet logo is baked once when a campaign loads, so a skipped bake leaves
     // the custom team's logo missing for the whole session.
     DefaultSetting("gpu.xenos.async_shader_compilation", "false");
+#ifdef __linux__
+    // Adaptive vsync on Linux (patches/rexglue-vsync-relaxed.patch). With strict
+    // FIFO a gameplay frame just over 16.7 ms waits a whole extra refresh, so a
+    // Linux player saw 60 fps in menus but 30 in play (half speed, since game
+    // speed follows the frame rate). Relaxed FIFO shows a late frame at once.
+    DefaultSetting("gpu.vulkan.vsync_relaxed", "true");
+#endif
 
     // Find the game files without a command line: a "game" folder next to the
     // exe or in a parent folder. --title.game_root still wins. RunSetup asks the
