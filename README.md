@@ -106,7 +106,7 @@ release of the game needs its own addresses in the manifest and hooks, and a new
 |---|---|
 | [tools/port_addresses.py](tools/port_addresses.py) | Finds functions from Blitz 1 in Blitz 2 by instruction pattern (whole functions from `.pdata`, with branch targets and address immediates masked). Ported the CRT `setjmp`/`longjmp`, the XAPI fiber functions, the engine's recursive-lock wrapper and `XUserCheckPrivilege` in minutes instead of re-deriving them. |
 | [blitz/blitz2_manifest.toml](blitz/blitz2_manifest.toml) | Codegen manifest: `setjmp`/`longjmp`, XAPI fibers mapped to SDK host-fiber shims, and **console-exact vector math** — with the SDK's fast `vmaddfp`/estimates, player faces and arms shot out into long spikes in close-ups. |
-| [blitz/src/main.cpp](blitz/src/main.cpp) | **Vulkan by default** — on Direct3D 12 the game ran at ~10 fps in play (the same was reported for Xenia: [#1628](https://github.com/xenia-project/game-compatibility/issues/1628), [#332](https://github.com/xenia-canary/game-compatibility/issues/332)). **Resolve readback `fast`** — `full` (Blitz 1's setting) stalled the CPU on every resolve and held the game at 30 fps, i.e. slow motion; `none` left motion-blur ghost trails. Synchronous shader compilation, game-folder discovery. |
+| [blitz/src/main.cpp](blitz/src/main.cpp) | **Vulkan by default** — on Direct3D 12 the game ran at ~10 fps in play (the same was reported for Xenia: [#1628](https://github.com/xenia-project/game-compatibility/issues/1628), [#332](https://github.com/xenia-canary/game-compatibility/issues/332)). **Resolve readback `fast`** — `full` (Blitz 1's setting) stalled the CPU on every resolve and held the game at 30 fps, i.e. slow motion; `none` left motion-blur ghost trails. **Adaptive VSync** (relaxed FIFO, SDK patch `patches/rexglue-vsync-relaxed.patch`) — strict VSync turned a frame just over 16.7 ms into 30 fps, i.e. half speed. **Faster heavy scenes** — `execute_unclipped_draw_vs_on_cpu` on (Xenia's default) and `clear_memory_page_state` off: full-field kickoffs at 2x went from ~50 to ~60 fps. Synchronous shader compilation, game-folder discovery. |
 | [blitz/src/blitz_hooks.cpp](blitz/src/blitz_hooks.cpp) | Offline user-created content (`XUserCheckPrivilege` grants privilege 247 for campaign create-a-team saves). Optional intro skip: detours CRI Sofdec's `mwPlyStartFname` so the boot movie can't open, and the game moves straight on. Blitz 1's boot-deadlock fix isn't needed — Blitz 2 ships the corrected lock release. |
 | [blitz/src/blitz_setup.cpp](blitz/src/blitz_setup.cpp) | First-run setup: XDVDFS disc-image unpacker, XEX title-ID / hash check, setup screen. |
 | [blitz/src/blitz_menu.cpp](blitz/src/blitz_menu.cpp) | Pre-game launcher and in-game options menu (F1 / Guide / LB+RB+Back). |
@@ -116,7 +116,7 @@ release of the game needs its own addresses in the manifest and hooks, and a new
 ## Known issues
 
 - 3x / 4x render resolution is GPU-bound (about 40 / 28 fps on an RTX 4070 SUPER), and the
-  game slows down below 60 fps. 2x matches a 1440p screen.
+  game slows down below 60 fps. 2x (1440p) holds ~60 fps, including full-field kickoffs.
 - The first launch shows a black screen for up to a minute while shaders compile; later
   launches reach the title screen in about 30 seconds.
 - Direct3D 12 (`--gpu.driver=d3d12`) works but runs at ~10 fps in play.
