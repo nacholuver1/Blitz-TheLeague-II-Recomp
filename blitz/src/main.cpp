@@ -103,6 +103,10 @@ class BlitzApp : public rex::app::TitleApp {
     // Windows (half speed, since game speed follows the frame rate). Relaxed FIFO
     // shows a late frame at once. Vulkan only; no effect with --gpu.driver=d3d12.
     DefaultSetting("gpu.vulkan.vsync_relaxed", "true");
+    // Xenia's default (ReXGlue ships it off): run the vertex shader of unclipped
+    // draws on the CPU to size their EDRAM range, avoiding render-target copies
+    // of the whole EDRAM. ~2 fps more in heavy 2x scenes here (53 -> 55 average).
+    DefaultSetting("gpu.xenos.execute_unclipped_draw_vs_on_cpu", "true");
 
     // Find the game files without a command line: a "game" folder next to the
     // exe or in a parent folder. --title.game_root still wins. RunSetup asks the
