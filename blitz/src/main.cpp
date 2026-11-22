@@ -107,6 +107,12 @@ class BlitzApp : public rex::app::TitleApp {
     // draws on the CPU to size their EDRAM range, avoiding render-target copies
     // of the whole EDRAM. ~2 fps more in heavy 2x scenes here (53 -> 55 average).
     DefaultSetting("gpu.xenos.execute_unclipped_draw_vs_on_cpu", "true");
+    // Skip the end-of-frame refresh of page state for GPU-written memory. In
+    // heavy 2x scenes it was the biggest single cost: ~55.5 -> ~60 fps average
+    // (lowest 53 -> 58). Watch for stale render-to-texture results (motion blur,
+    // replays, create-a-team helmet bake); turn back on with
+    // --gpu.xenos.clear_memory_page_state=true if anything looks wrong.
+    DefaultSetting("gpu.xenos.clear_memory_page_state", "false");
 
     // Find the game files without a command line: a "game" folder next to the
     // exe or in a parent folder. --title.game_root still wins. RunSetup asks the
