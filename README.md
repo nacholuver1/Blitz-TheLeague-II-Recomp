@@ -34,7 +34,7 @@ filtering on an RTX 4070 SUPER. Keep **VSync on**: game speed follows the frame 
 game needs the vertical blank to advance.
 
 The player README ([release/README.txt](release/README.txt)) covers controls, settings and
-command-line flags (`--blitz.iso=`, `--title.game_root=`, `--blitz.launcher=false`,
+command-line flags (`--blitz.iso=`, `--title.game_root=`, `--blitz.launcher=false`, `--blitz.check_updates=false`,
 `--blitz.skip_intro=true`, `--ui.fullscreen=`, `--gpu.driver=`, and any `--section.name=value`
 from `blitz2.toml`).
 
@@ -110,6 +110,8 @@ release of the game needs its own addresses in the manifest and hooks, and a new
 | [blitz/src/blitz_hooks.cpp](blitz/src/blitz_hooks.cpp) | Offline user-created content (`XUserCheckPrivilege` grants privilege 247 for campaign create-a-team saves). Optional intro skip: detours CRI Sofdec's `mwPlyStartFname` so the boot movie can't open, and the game moves straight on. Blitz 1's boot-deadlock fix isn't needed — Blitz 2 ships the corrected lock release. |
 | [blitz/src/blitz_setup.cpp](blitz/src/blitz_setup.cpp) | First-run setup: XDVDFS disc-image unpacker, XEX title-ID / hash check, setup screen. |
 | [blitz/src/blitz_menu.cpp](blitz/src/blitz_menu.cpp) | Pre-game launcher and in-game options menu (F1 / Guide / LB+RB+Back). |
+| [blitz/src/blitz_look.cpp](blitz/src/blitz_look.cpp) | The menus' look, after the game's own menus (scene and colours in `blitz_palette.h`): all drawn, no game art; Impact / Bahnschrift from Windows, DejaVu / Liberation on Linux. |
+| [blitz/src/blitz_updater.cpp](blitz/src/blitz_updater.cpp) | Updates from GitHub releases: the launcher checks `releases/latest`, a newer release opens an Update now / Later popup, the package must match GitHub's SHA-256 digest, files are swapped with `.old` backups (rolled back on failure; `*.toml`, `game`, `user`, `cache`, `logs` never touched) and the new version restarts. WinHTTP + `tar.exe` on Windows, `curl` + `tar` on Linux. The version is `project(VERSION)` in `blitz/CMakeLists.txt`; `BLITZ_UPDATE_URL` points it at a test server. |
 | [patches/](patches/) | SDK patches shared with Blitz 1: `dcbz` clears a 128-byte cache line on Xenon (the codegen cleared 32), and extra audio-stream diagnostics in the log. |
 | [tools/](tools/) | Build scripts (Windows and Linux), release packers, ISO extractor, XEX header dump, and debugging helpers. |
 
