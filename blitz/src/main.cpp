@@ -66,6 +66,9 @@ class BlitzApp : public rex::app::TitleApp {
     // where D3D12 through vkd3d is 2-3x faster); native Vulkan runs ~3x faster
     // here with all textures. --gpu.driver=d3d12 still selects D3D12.
     DefaultSetting("gpu.driver", "vulkan");
+    // Hide the mouse cursor after 2 s without movement (the SDK default never
+    // hides it, so it sat over the game). Moving the mouse brings it back.
+    DefaultSetting("ui.cursor_timeout", "2");
     // The SDK writes app.root into blitz2.toml. Lock it to the exe's folder so
     // a moved or renamed game folder keeps its saves/cache/logs with it.
     if (auto r = settings.SetText(rex::SettingLayer::kLock, "app.root",
