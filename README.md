@@ -1,5 +1,7 @@
 # Blitz: The League II — native PC recompilation
 
+<a href="https://recomplauncher.com"><picture><source media="(prefers-color-scheme: dark)" srcset="https://recomplauncher.com/assets/press/launcher/badge-light.svg"><img alt="Get it on RecompLauncher" src="https://recomplauncher.com/assets/press/launcher/badge-dark.svg" height="48"></picture></a>
+
 An unofficial native Windows and Linux port of **Blitz: The League II** (Xbox 360, 2008), made
 by *static recompilation* with the [ReXGlue SDK](https://github.com/rexglue/rexglue-sdk).
 The game's PowerPC code is translated to C++ ahead of time and compiled into a normal x64
