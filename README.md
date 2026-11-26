@@ -61,7 +61,7 @@ git clone --recursive https://github.com/nacholuver1/Blitz-TheLeague-II-Recomp.g
 cd Blitz-TheLeague-II-Recomp
 
 rem 1. ReXGlue SDK v0.11.0 (submodule) + this project's patches, then build and install it
-git -C deps/rexglue-sdk apply ../../patches/rexglue-dcbz-128.patch ../../patches/rexglue-audio-diag.patch ../../patches/rexglue-vsync-relaxed.patch
+git -C deps/rexglue-sdk apply ../../patches/rexglue-dcbz-128.patch ../../patches/rexglue-audio-diag.patch ../../patches/rexglue-vsync-relaxed.patch ../../patches/rexglue-ffx-present.patch
 tools\build_sdk.bat
 
 rem 2. Put your extracted disc in game\ (must contain default.xex), e.g.
@@ -114,7 +114,7 @@ release of the game needs its own addresses in the manifest and hooks, and a new
 | [blitz/src/blitz_menu.cpp](blitz/src/blitz_menu.cpp) | Pre-game launcher and in-game options menu (F1 / Guide / LB+RB+Back). |
 | [blitz/src/blitz_look.cpp](blitz/src/blitz_look.cpp) | The menus' look, after the game's own menus (scene and colours in `blitz_palette.h`): all drawn, no game art; Impact / Bahnschrift from Windows, DejaVu / Liberation on Linux. |
 | [blitz/src/blitz_updater.cpp](blitz/src/blitz_updater.cpp) | Updates from GitHub releases: the launcher checks `releases/latest`, a newer release opens an Update now / Later popup, the package must match GitHub's SHA-256 digest, files are swapped with `.old` backups (rolled back on failure; `*.toml`, `game`, `user`, `cache`, `logs` never touched) and the new version restarts. WinHTTP + `tar.exe` on Windows, `curl` + `tar` on Linux. The version is `project(VERSION)` in `blitz/CMakeLists.txt`; `BLITZ_UPDATE_URL` points it at a test server. |
-| [patches/](patches/) | SDK patches shared with Blitz 1: `dcbz` clears a 128-byte cache line on Xenon (the codegen cleared 32), and extra audio-stream diagnostics in the log. |
+| [patches/](patches/) | SDK patches shared with Blitz 1: `dcbz` clears a 128-byte cache line on Xenon (the codegen cleared 32), and extra audio-stream diagnostics in the log. `rexglue-ffx-present.patch` adds AMD FidelityFX FSR 1 / CAS upscaling to the presenter (ported from Xenia) and a presentation shape setting for ultrawide. |
 | [tools/](tools/) | Build scripts (Windows and Linux), release packers, ISO extractor, XEX header dump, and debugging helpers. |
 
 ## Known issues
