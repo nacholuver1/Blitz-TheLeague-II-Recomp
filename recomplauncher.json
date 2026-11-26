@@ -109,7 +109,7 @@
     },
     {
       "id": "screen_shape", "label": "Screen shape", "group": "Video",
-      "help": "21:9 and 32:9 widen the 3D view for ultrawide screens; menus keep their 16:9 shape in the middle.",
+      "help": "21:9 and 32:9 widen the 3D view for ultrawide screens. The HUD keeps its layout and is stretched to fit.",
       "choices": [
         { "label": "16:9 (original)", "set": { "blitz/aspect_ratio": "\"16:9\"" } },
         { "label": "21:9 ultrawide", "set": { "blitz/aspect_ratio": "\"21:9\"" } },

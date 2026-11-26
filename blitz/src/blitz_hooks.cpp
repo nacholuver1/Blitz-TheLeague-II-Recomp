@@ -61,37 +61,40 @@ REX_DETOUR(sub_82491900, u32, (u32 user_index, u32 privilege, be_u32* result)) {
 // ---------------------------------------------------------------------------
 // Ultrawide (blitz.aspect_ratio).
 //
-// sub_8232DF78 (game start-up) stores the view's height / width ratio at
-// 0x828834B4: 9/16 = 0.5625 with a widescreen video mode, 0.75 without. The
-// camera projection functions (sub_8228E690, sub_82291400, ...) read it, and
-// sub_8232DF40 returns 1 / ratio as the aspect ratio. Views also get an aspect
-// ratio through two setters (sub_8243A8A8, sub_8242F210: view+732, dirty bit),
-// which sub_8228BEE8 calls with the 16:9 constant directly. With a wider screen
-// shape chosen, the ratio is set to match and the setters turn 16:9 into it, so
-// the 3D view widens (the picture keeps its pixels and is presented at the
-// chosen shape). The game lays its 2D overlay out for the shape too: menus
-// stay 16:9 in the middle and the HUD moves to the sides (tested 2026-11-26).
+// The game cameras (sub_82338A10, sub_8228E690, ...) fill a view command
+// (vtable 0x82058CA8) with a horizontal size at +164 and a vertical size at
+// +168 = horizontal * 0x828834B4, the height / width ratio start-up sets to
+// 9/16 (sub_8232DF78), and hand it to sub_822A4EA8, which copies it into the
+// render queue. Widening only the horizontal size there gives Hor+: the same
+// vertical view, more to the sides (the picture keeps its pixels and is
+// presented at the chosen shape). Changing the ratio global instead crops the
+// height, and the 2D layout reads it too: its menus and HUD then reach past
+// the 16:9 edges, where the game parks unused pieces (a white dash in play,
+// a "00" box on the matchup screen). Turning the 16:9 the view setters
+// sub_8243A8A8 / sub_8242F210 (view+732) receive into the wider shape does the
+// same to the 2D layout, so those are left alone too: the 2D layout stays 16:9
+// and is stretched with the picture (tested 2026-11-26).
 // ---------------------------------------------------------------------------
 namespace {
+constexpr u32 kViewCommandVtable = 0x82058CA8;
 constexpr u32 kViewHeightOverWidth = 0x828834B4;
 
 bool Widened() { return blitz::AspectRatio() > 16.0 / 9.0 + 0.01; }
-
-f32 WidenAspect(f32 aspect) {
-  return Widened() && std::fabs(aspect - 16.0f / 9.0f) < 0.01f
-             ? static_cast<f32>(blitz::AspectRatio())
-             : aspect;
-}
 }  // namespace
 
-REX_HOOK_RAW(sub_8232DF78) {
-  __imp__sub_8232DF78(ctx, base);
-  if (Widened()) {
-    REX_STORE_U32(kViewHeightOverWidth,
-                  std::bit_cast<u32>(static_cast<f32>(1.0 / blitz::AspectRatio())));
+REX_HOOK_RAW(sub_822A4EA8) {
+  const u32 command = ctx.r4.u32;
+  if (command && Widened() && REX_LOAD_U32(command) == kViewCommandVtable) {
+    const f32 ratio = std::bit_cast<f32>(REX_LOAD_U32(kViewHeightOverWidth));
+    const f32 horizontal = std::bit_cast<f32>(REX_LOAD_U32(command + 164));
+    const f32 vertical = std::bit_cast<f32>(REX_LOAD_U32(command + 168));
+    // A camera view: the vertical size was derived from the horizontal one.
+    if (ratio > 0.0f && horizontal > 0.0f &&
+        std::fabs(vertical - horizontal * ratio) <= 1e-4f * horizontal) {
+      const f32 widen = static_cast<f32>(blitz::AspectRatio() * ratio);  // 4/3 for 64:27
+      REX_STORE_U32(command + 164, std::bit_cast<u32>(horizontal * widen));
+    }
   }
+  __imp__sub_822A4EA8(ctx, base);
 }
 
-REX_DETOUR(sub_8243A8A8, void, (u32 view, f32 aspect)) { original(view, WidenAspect(aspect)); }
-
-REX_DETOUR(sub_8242F210, void, (u32 view, f32 aspect)) { original(view, WidenAspect(aspect)); }

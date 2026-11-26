@@ -212,7 +212,7 @@ const char* Note(Row row) {
     case kRenderRes: return "Internal resolution; above your screen it supersamples.";
     case kAntiAlias: return "FXAA smooths jagged edges.";
     case kUpscaling: return "Sharper scaling to your screen. FSR shines at 1x on a big screen.";
-    case kScreenShape: return "Ultrawide widens the 3D view; menus keep their 16:9 shape.";
+    case kScreenShape: return "Ultrawide widens the 3D view; the HUD is stretched to fit.";
     case kSharpen: return "Sharpens the final image. Pairs well with FXAA.";
     case kFiltering: return "Anisotropic filtering: sharper textures at an angle.";
     case kVsync: return "Wait for the monitor refresh. Off can tear.";
