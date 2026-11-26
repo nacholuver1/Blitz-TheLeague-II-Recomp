@@ -34,7 +34,7 @@ filtering on an RTX 4070 SUPER. Keep **VSync on**: game speed follows the frame 
 game needs the vertical blank to advance.
 
 The player README ([release/README.txt](release/README.txt)) covers controls, settings and
-command-line flags (`--blitz.iso=`, `--title.game_root=`, `--blitz.launcher=false`, `--blitz.check_updates=false`,
+command-line flags (`--blitz.game=` (a disc image or extracted folder, started without the launcher menu), `--blitz.iso=`, `--title.game_root=`, `--blitz.launcher=false`, `--blitz.check_updates=false`,
 `--blitz.skip_intro=true`, `--ui.fullscreen=`, `--gpu.driver=`, and any `--section.name=value`
 from `blitz2.toml`).
 
