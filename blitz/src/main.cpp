@@ -18,6 +18,7 @@
 #include <atomic>
 #include <cstdlib>
 #include <filesystem>
+#include <string>
 #include <string_view>
 
 #include <rex/path_settings.h>
@@ -103,6 +104,13 @@ class BlitzApp : public rex::app::TitleApp {
     // helmet logo is baked once when a campaign loads, so a skipped bake leaves
     // the custom team's logo missing for the whole session.
     DefaultSetting("gpu.xenos.async_shader_compilation", "false");
+    // Ultrawide: the 3D view is widened in blitz_hooks.cpp; present the picture at the same
+    // shape (letterboxed to the window as usual). Not saved, so it always follows the setting.
+    if (const std::string aspect = blitz::Settings().aspect_ratio.Get(); aspect == "21:9") {
+      DefaultSetting("gpu.xenos.present_aspect_ratio", "64:27");
+    } else if (aspect == "32:9") {
+      DefaultSetting("gpu.xenos.present_aspect_ratio", "32:9");
+    }
     // Adaptive vsync (patches/rexglue-vsync-relaxed.patch). With strict FIFO a
     // frame just over 16.7 ms waits a whole extra refresh: a Linux player saw 60
     // fps in menus but 30 in play, and full-field kickoffs at 1440p dipped on

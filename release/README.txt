@@ -67,6 +67,10 @@ Command-line options (every setting in blitz2.toml works as --section.name=value
   --gpu.driver=d3d12          use Direct3D 12 instead of Vulkan (Windows only;
                               much slower in this game)
   --gpu.resolution_scale_x=2 --gpu.resolution_scale_y=2   render resolution
+  --gpu.xenos.present_effect=fsr|cas|bilinear   scaling to your screen: AMD FSR 1
+                              upscaling, AMD CAS sharpening, or plain (default)
+  --blitz.aspect_ratio=21:9|32:9|16:9   ultrawide: widens the 3D view (menus
+                              keep their 16:9 shape in the middle)
   Note: options given on the command line are saved to blitz2.toml if you
   change a setting in the menu during that run.
 

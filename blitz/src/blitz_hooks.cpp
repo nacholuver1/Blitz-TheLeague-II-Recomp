@@ -4,6 +4,8 @@
 
 #include <rex/ppc/hook.h>
 
+#include <bit>
+#include <cmath>
 #include <cstring>
 
 #include "blitz_settings.h"
@@ -55,3 +57,41 @@ REX_DETOUR(sub_82491900, u32, (u32 user_index, u32 privilege, be_u32* result)) {
   }
   return original(user_index, privilege, result);
 }
+
+// ---------------------------------------------------------------------------
+// Ultrawide (blitz.aspect_ratio).
+//
+// sub_8232DF78 (game start-up) stores the view's height / width ratio at
+// 0x828834B4: 9/16 = 0.5625 with a widescreen video mode, 0.75 without. The
+// camera projection functions (sub_8228E690, sub_82291400, ...) read it, and
+// sub_8232DF40 returns 1 / ratio as the aspect ratio. Views also get an aspect
+// ratio through two setters (sub_8243A8A8, sub_8242F210: view+732, dirty bit),
+// which sub_8228BEE8 calls with the 16:9 constant directly. With a wider screen
+// shape chosen, the ratio is set to match and the setters turn 16:9 into it, so
+// the 3D view widens (the picture keeps its pixels and is presented at the
+// chosen shape). The game lays its 2D overlay out for the shape too: menus
+// stay 16:9 in the middle and the HUD moves to the sides (tested 2026-11-26).
+// ---------------------------------------------------------------------------
+namespace {
+constexpr u32 kViewHeightOverWidth = 0x828834B4;
+
+bool Widened() { return blitz::AspectRatio() > 16.0 / 9.0 + 0.01; }
+
+f32 WidenAspect(f32 aspect) {
+  return Widened() && std::fabs(aspect - 16.0f / 9.0f) < 0.01f
+             ? static_cast<f32>(blitz::AspectRatio())
+             : aspect;
+}
+}  // namespace
+
+REX_HOOK_RAW(sub_8232DF78) {
+  __imp__sub_8232DF78(ctx, base);
+  if (Widened()) {
+    REX_STORE_U32(kViewHeightOverWidth,
+                  std::bit_cast<u32>(static_cast<f32>(1.0 / blitz::AspectRatio())));
+  }
+}
+
+REX_DETOUR(sub_8243A8A8, void, (u32 view, f32 aspect)) { original(view, WidenAspect(aspect)); }
+
+REX_DETOUR(sub_8242F210, void, (u32 view, f32 aspect)) { original(view, WidenAspect(aspect)); }
