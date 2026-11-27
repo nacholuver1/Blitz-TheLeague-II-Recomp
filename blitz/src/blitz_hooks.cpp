@@ -5,8 +5,23 @@
 #include <rex/ppc/hook.h>
 
 #include <bit>
+#include <chrono>
 #include <cmath>
 #include <cstring>
+
+#if defined(_WIN32)
+#ifndef NOMINMAX
+#define NOMINMAX
+#endif
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN
+#endif
+#include <windows.h>
+#else
+#include <cerrno>
+#include <time.h>
+#endif
+#include <immintrin.h>
 
 #include "blitz_settings.h"
 
@@ -96,5 +111,104 @@ REX_HOOK_RAW(sub_822A4EA8) {
     }
   }
   __imp__sub_822A4EA8(ctx, base);
+}
+
+// ---------------------------------------------------------------------------
+// Smart wait (blitz.smart_wait, blitz.wait_spin_us, blitz.wait_sleep_us).
+//
+// Two of the game's waits spin, which is free on the console (its db16cyc
+// hint hands the core to the other hardware thread) but keeps a whole host
+// core busy, about 2 of the 3.4 cores the game used in the attract demo
+// (2026-11-27, laptop slowness reports 159199 / 159384):
+//  - the main thread's wait for its jobs, sub_82636DA8, polls a few flags and
+//    calls sub_827493B0 (NtYieldExecution) between polls; the host yield
+//    returns at once when nothing else is ready to run;
+//  - the D3D library's GPU waits (BlockOnFence and others) call sub_824AF628
+//    on every pass: 32 db16cyc (nothing on the host), then the fence and hang
+//    checks; it returns 1 to keep waiting.
+// After spinning wait_spin_us, each further pass sleeps wait_sleep_us on a
+// high-resolution timer. The yield wrapper has other callers; only calls
+// whose return address is inside sub_82636DA8 back off. Idea from the
+// Pirates of the Caribbean: At World's End and Guitar Hero: Warriors of Rock
+// ReXGlue recomps (docs/cpu-usage.md, docs/fixes-from-gh5.md), written fresh.
+// ---------------------------------------------------------------------------
+namespace {
+using WaitClock = std::chrono::steady_clock;
+
+constexpr u32 kJobWaitBegin = 0x82636DA8;  // sub_82636DA8
+constexpr u32 kJobWaitEnd = 0x82636F18;    // next function, sub_82636F18
+
+// One wait in progress on this thread: polls closer together than this belong
+// to the same wait (sleeps are at most 1 ms, the setting's maximum).
+constexpr auto kSameWaitGap = std::chrono::microseconds(1500);
+
+struct WaitState {
+  u32 site = 0;  // the poll's return address or function
+  WaitClock::time_point start{};
+  WaitClock::time_point last{};
+};
+thread_local WaitState t_wait;
+
+#if defined(_WIN32)
+// This thread's high-resolution timer, closed when the thread exits.
+struct WaitTimer {
+  HANDLE handle = CreateWaitableTimerExW(nullptr, nullptr, CREATE_WAITABLE_TIMER_HIGH_RESOLUTION,
+                                         TIMER_ALL_ACCESS);
+  ~WaitTimer() {
+    if (handle) CloseHandle(handle);
+  }
+};
+#endif
+
+void SleepMicroseconds(i32 us) {
+#if defined(_WIN32)
+  thread_local WaitTimer wait_timer;
+  const HANDLE timer = wait_timer.handle;
+  if (timer) {
+    LARGE_INTEGER due;
+    due.QuadPart = -static_cast<LONGLONG>(us) * 10;  // relative, 100 ns units
+    if (SetWaitableTimer(timer, &due, 0, nullptr, nullptr, FALSE)) {
+      WaitForSingleObject(timer, INFINITE);
+      return;
+    }
+  }
+  Sleep(1);  // no high-resolution timer (Windows before 10 1803)
+#else
+  timespec ts{0, static_cast<long>(us) * 1000};
+  while (nanosleep(&ts, &ts) == -1 && errno == EINTR) {
+  }  // a signal cut it short: sleep the rest
+#endif
+}
+
+// Called on each pass of a wait that is not over yet.
+void BackOff(u32 site) {
+  const auto now = WaitClock::now();
+  if (t_wait.site != site || now - t_wait.last > kSameWaitGap) {
+    t_wait.site = site;
+    t_wait.start = now;
+  }
+  const auto& settings = blitz::Settings();
+  if (now - t_wait.start < std::chrono::microseconds(settings.wait_spin_us.Get())) {
+    _mm_pause();
+  } else {
+    SleepMicroseconds(settings.wait_sleep_us.Get());
+  }
+  t_wait.last = WaitClock::now();
+}
+}  // namespace
+
+REX_HOOK_RAW(sub_827493B0) {
+  const u32 caller = static_cast<u32>(ctx.lr);
+  __imp__sub_827493B0(ctx, base);
+  if (caller >= kJobWaitBegin && caller < kJobWaitEnd && blitz::Settings().smart_wait.Get()) {
+    BackOff(caller);
+  }
+}
+
+REX_HOOK_RAW(sub_824AF628) {
+  __imp__sub_824AF628(ctx, base);
+  if (ctx.r3.u32 == 1 && blitz::Settings().smart_wait.Get()) {
+    BackOff(0x824AF628);
+  }
 }
 

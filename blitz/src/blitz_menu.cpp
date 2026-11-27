@@ -84,6 +84,7 @@ enum Row {
   kMuteUnfocused,
   kAudioBuffer,
   kFpsCounter,
+  kSmartWait,
   kLauncherAtStart,
   kSkipIntro,
   kCloseMenu,
@@ -95,11 +96,11 @@ enum Row {
 const std::vector<Row> kLauncherRows = {
     kStartGame, kUpdates, kDisplayMode, kRenderRes,  kAntiAlias,  kUpscaling, kFiltering, kVsync,
     kAspect,    kScreenShape, kVolume,  kMute,       kMuteUnfocused, kAudioBuffer, kFpsCounter,
-    kLauncherAtStart, kSkipIntro, kQuit};
+    kSmartWait, kLauncherAtStart, kSkipIntro, kQuit};
 const std::vector<Row> kInGameRows = {
     kDisplayMode, kRenderRes,  kAntiAlias,   kUpscaling, kFiltering,       kVsync,
     kAspect,      kScreenShape, kVolume,     kMute,        kMuteUnfocused, kAudioBuffer,  kFpsCounter,
-    kLauncherAtStart, kSkipIntro, kCloseMenu, kQuit};
+    kSmartWait, kLauncherAtStart, kSkipIntro, kCloseMenu, kQuit};
 
 constexpr const char* kRestartSettings[] = {"gpu.resolution_scale_x", "gpu.xenos.swap_post_effect",
                                             "blitz.aspect_ratio",
@@ -182,6 +183,7 @@ const char* Label(Row row) {
     case kMuteUnfocused: return "Mute in background";
     case kAudioBuffer: return "Audio buffer";
     case kFpsCounter: return "FPS counter";
+    case kSmartWait: return "CPU waits";
     case kLauncherAtStart: return "Launcher at startup";
     case kSkipIntro: return "Intro video";
     case kCloseMenu: return "Close menu";
@@ -222,6 +224,7 @@ const char* Note(Row row) {
     case kMuteUnfocused: return "Silence the game when its window is in the background.";
     case kAudioBuffer: return "Bigger fixes crackles, smaller has less delay.";
     case kFpsCounter: return "Show frame rate in the corner (also F3).";
+    case kSmartWait: return "Smart lets idle game threads sleep: less CPU, cooler laptops. Console spins like the Xbox.";
     case kLauncherAtStart: return "Off starts the game directly. F1 / Esc / Guide still open this menu.";
     case kSkipIntro: return "Skip goes straight to loading instead of the opening logo video.";
     case kCloseMenu: return "Back to the game.";
@@ -263,6 +266,7 @@ std::string Value(Row row) {
     case kMuteUnfocused: return GetBool("apu.mute_unfocused") ? "On" : "Off";
     case kAudioBuffer: return kAudioLabels[AudioIndex()];
     case kFpsCounter: return GetBool("blitz.show_fps") ? "On" : "Off";
+    case kSmartWait: return GetBool("blitz.smart_wait") ? "Smart" : "Console";
     case kLauncherAtStart: return GetBool("blitz.launcher") ? "On" : "Off";
     case kSkipIntro: return GetBool("blitz.skip_intro") ? "Skip" : "Play";
     default: return {};
@@ -563,6 +567,7 @@ class BlitzMenu final : public rex::ui::IDialog {
         ui_.ShowOverlay("debug", on);
         break;
       }
+      case kSmartWait: SetBool("blitz.smart_wait", !GetBool("blitz.smart_wait")); break;
       case kLauncherAtStart: SetBool("blitz.launcher", !GetBool("blitz.launcher")); break;
       case kUpdates: {
         const bool on = !GetBool("blitz.check_updates");

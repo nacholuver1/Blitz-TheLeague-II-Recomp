@@ -127,6 +127,15 @@
       "defaults": { "blitz/show_fps": "false" }
     },
     {
+      "id": "smart_wait", "label": "CPU waits", "group": "Video", "advanced": true,
+      "help": "Smart lets idle game threads sleep: less CPU, cooler laptops and handhelds. Console spins like the Xbox did.",
+      "choices": [
+        { "label": "Smart", "set": { "blitz/smart_wait": "true" } },
+        { "label": "Console", "set": { "blitz/smart_wait": "false" } }
+      ],
+      "defaults": { "blitz/smart_wait": "true" }
+    },
+    {
       "id": "skip_intro", "label": "Intro video", "group": "Video",
       "help": "Skip goes straight to loading instead of the opening logo video.",
       "choices": [

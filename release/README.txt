@@ -47,6 +47,10 @@ Settings
   so anything below 60 is slow motion (and with VSync off it doesn't advance
   at all). 3x and 4x render resolution need a very fast GPU.
   "Intro video: Skip" skips the opening logo video at startup.
+  "CPU waits: Smart" (the default) lets the game's idle threads sleep instead
+  of spinning a whole CPU core each, as they did on the Xbox: about half the
+  CPU use, which helps laptops and handhelds keep their speed. "Console"
+  brings the old behaviour back.
 
 Updates
   The launcher asks GitHub for a newer release when it opens. When there is
@@ -71,6 +75,8 @@ Command-line options (every setting in blitz2.toml works as --section.name=value
                               upscaling, AMD CAS sharpening, or plain (default)
   --blitz.aspect_ratio=21:9|32:9|16:9   ultrawide: widens the 3D view (the HUD
                               keeps its layout and is stretched to fit)
+  --blitz.smart_wait=false    the Xbox's busy waits (more CPU; for testing)
+  --blitz.wait_spin_us=100 --blitz.wait_sleep_us=100   smart wait timing
   Note: options given on the command line are saved to blitz2.toml if you
   change a setting in the menu during that run.
 
