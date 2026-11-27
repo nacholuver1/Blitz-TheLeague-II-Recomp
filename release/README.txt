@@ -45,7 +45,10 @@ Settings
   Recommended: 2x render resolution, FXAA (extreme), 16x texture filtering.
   Keep VSync ON: the game runs at 60 fps and its speed follows the frame rate,
   so anything below 60 is slow motion (and with VSync off it doesn't advance
-  at all). 3x and 4x render resolution need a very fast GPU.
+  at all). The menu goes up to 2x (60 fps on an RTX 4070 SUPER); 3x (about
+  40 fps there) and 4x still work from the command line
+  (--gpu.resolution_scale_x=3 --gpu.resolution_scale_y=3) for much faster
+  GPUs.
   "Intro video: Skip" skips the opening logo video at startup.
   "CPU waits: Smart" (the default) lets the game's idle threads sleep instead
   of spinning a whole CPU core each, as they did on the Xbox: about half the

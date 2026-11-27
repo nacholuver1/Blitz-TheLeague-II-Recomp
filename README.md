@@ -120,7 +120,8 @@ release of the game needs its own addresses in the manifest and hooks, and a new
 ## Known issues
 
 - 3x / 4x render resolution is GPU-bound (about 40 / 28 fps on an RTX 4070 SUPER), and the
-  game slows down below 60 fps. 2x (1440p) holds ~60 fps, including full-field kickoffs.
+  game slows down below 60 fps. 2x (1440p) holds ~60 fps, including full-field kickoffs, so
+  the menus stop at 2x; 3x and 4x remain available from the command line.
 - The first launch shows a black screen for up to a minute while shaders compile; later
   launches reach the title screen in about 30 seconds.
 - Direct3D 12 (`--gpu.driver=d3d12`) works but runs at ~10 fps in play.
