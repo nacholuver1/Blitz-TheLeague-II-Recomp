@@ -20,6 +20,12 @@ class BlitzSettings : public rex::SettingOwner {
   REX_SETTING(bool, check_updates, true,
               "The launcher asks GitHub for a newer release and offers to install it");
   REX_SETTING(bool, skip_intro, false, "Skip the opening logo video");
+  REX_SETTING(bool, spec_warning, true,
+              "At startup, warn when the PC is below what the game needs for full speed "
+              "(integrated graphics, under 4 GB of video memory, 8 GB of RAM or 6 CPU threads)");
+  REX_SETTING(bool, spec_warning_test, false,
+              "Show the hardware warning even on a PC that meets the bar (for testing)",
+              rex::kNoSave);
   REX_SETTING(std::filesystem::path, iso, "",
               "Disc image to set up from on first run (--blitz.iso=path); unpacked into a "
               "'game' folder next to the exe",
