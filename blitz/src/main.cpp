@@ -116,7 +116,14 @@ class BlitzApp : public rex::app::TitleApp {
     // fps in menus but 30 in play, and full-field kickoffs at 1440p dipped on
     // Windows (half speed, since game speed follows the frame rate). Relaxed FIFO
     // shows a late frame at once. Vulkan only; no effect with --gpu.driver=d3d12.
+    // Where the surface has no relaxed FIFO (most Wayland desktops) the SDK uses
+    // mailbox instead (patches/rexglue-vsync-guest-pacing.patch).
     DefaultSetting("gpu.vulkan.vsync_relaxed", "true");
+    // VSync Off in the menu: the SDK would also run the guest vblank at 1000 Hz,
+    // and the game's speed follows vblanks (a Linux player's game stalled and
+    // ignored the controller). Keep guest vblanks at 60 Hz; VSync then only
+    // changes how frames are shown.
+    DefaultSetting("gpu.vsync_paces_guest", "false");
     // Xenia's default (ReXGlue ships it off): run the vertex shader of unclipped
     // draws on the CPU to size their EDRAM range, avoiding render-target copies
     // of the whole EDRAM. ~2 fps more in heavy 2x scenes here (53 -> 55 average).

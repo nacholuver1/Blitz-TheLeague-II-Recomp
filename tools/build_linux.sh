@@ -16,7 +16,7 @@ action="${1:-release}"
 case "$action" in
   sdk)
     cd "$SDK"
-    for p in rexglue-dcbz-128 rexglue-audio-diag rexglue-vsync-relaxed rexglue-ffx-present; do
+    for p in rexglue-dcbz-128 rexglue-audio-diag rexglue-vsync-relaxed rexglue-ffx-present rexglue-vsync-guest-pacing; do
       if git apply --check "$ROOT/patches/$p.patch" 2>/dev/null; then
         git apply "$ROOT/patches/$p.patch"
         echo "applied $p"
