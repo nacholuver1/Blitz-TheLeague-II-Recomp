@@ -36,7 +36,10 @@ if (NOT WIN32)
 endif ()
 
 if (WIN32)
-  add_executable(blitz2 WIN32 src/main.cpp)
+  # Version information in the exe (Properties > Details), from project(VERSION).
+  enable_language(RC)
+  configure_file(src/blitz2.rc.in "${CMAKE_CURRENT_BINARY_DIR}/blitz2.rc" @ONLY)
+  add_executable(blitz2 WIN32 src/main.cpp "${CMAKE_CURRENT_BINARY_DIR}/blitz2.rc")
 else ()
   add_executable(blitz2 src/main.cpp)
 endif ()

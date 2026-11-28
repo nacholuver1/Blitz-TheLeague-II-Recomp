@@ -1,0 +1,34 @@
+// Windows version information for blitz2.exe (filled in by CMake from project(VERSION)).
+// Shown in the file's Properties > Details; it also tells antivirus engines what the
+// program is (unlabelled executables draw more machine-learning false positives).
+#include <winver.h>
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION     @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+ PRODUCTVERSION  @PROJECT_VERSION_MAJOR@,@PROJECT_VERSION_MINOR@,@PROJECT_VERSION_PATCH@,0
+ FILEFLAGSMASK   VS_FFI_FILEFLAGSMASK
+ FILEFLAGS       0
+ FILEOS          VOS_NT_WINDOWS32
+ FILETYPE        VFT_APP
+ FILESUBTYPE     VFT2_UNKNOWN
+BEGIN
+  BLOCK "StringFileInfo"
+  BEGIN
+    BLOCK "040904B0"
+    BEGIN
+      VALUE "CompanyName",      "Blitz: The League II Recomp (open source, MIT)"
+      VALUE "FileDescription",  "Blitz: The League II Recomp - PC port, needs your own copy of the game"
+      VALUE "FileVersion",      "@PROJECT_VERSION@"
+      VALUE "InternalName",     "blitz2"
+      VALUE "LegalCopyright",   "MIT License. Game content not included."
+      VALUE "OriginalFilename", "blitz2.exe"
+      VALUE "ProductName",      "Blitz: The League II Recomp"
+      VALUE "ProductVersion",   "@PROJECT_VERSION@"
+      VALUE "Comments",         "https://github.com/nacholuver1/Blitz-TheLeague-II-Recomp"
+    END
+  END
+  BLOCK "VarFileInfo"
+  BEGIN
+    VALUE "Translation", 0x0409, 1200
+  END
+END
